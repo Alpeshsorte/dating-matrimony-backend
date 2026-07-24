@@ -1,0 +1,14 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>Settings</h1><p>Configure the core behavior of your application.</p></div></div>
+  <section class="panel" style="max-width:650px;"><form method="post">{% csrf_token %}
+    <p><label for="{{ form.site_name.id_for_label }}">Site name</label><br>{{ form.site_name }}</p>
+    <p><label for="{{ form.support_email.id_for_label }}">Support email</label><br>{{ form.support_email }}</p>
+    <p><label for="{{ form.otp_expiry_minutes.id_for_label }}">OTP expiry (minutes)</label><br>{{ form.otp_expiry_minutes }}</p>
+    <p><label>{{ form.maintenance_mode }} Enable maintenance mode</label></p>
+    <button type="submit">Save settings</button>
+  </form><p><small>Last updated: {{ settings_object.updated_at|date:'d M Y, H:i' }}</small></p></section>
+{% endblock %}

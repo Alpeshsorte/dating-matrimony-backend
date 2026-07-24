@@ -1,0 +1,32 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}User management{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>User management</h1><p>Search, review, block, or unblock accounts.</p></div></div>
+  <section class="panel">
+    <form method="get" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
+      <input name="q" value="{{ query }}" placeholder="Username, email, or phone">
+      <select name="status"><option value="">All statuses</option><option value="active" {% if status == 'active' %}selected{% endif %}>Active</option><option value="blocked" {% if status == 'blocked' %}selected{% endif %}>Blocked</option></select>
+      <select name="verified"><option value="">All verification states</option><option value="yes" {% if verified == 'yes' %}selected{% endif %}>Verified</option><option value="no" {% if verified == 'no' %}selected{% endif %}>Not verified</option></select>
+      <button type="submit">Filter</button>
+    </form>
+    <table>
+      <thead><tr><th>User</th><th>Email</th><th>Phone</th><th>Verification</th><th>Status</th><th>Joined</th><th>Action</th></tr></thead>
+      <tbody>{% for user in page_obj %}<tr>
+        <td>{{ user.username }}{% if user.is_superuser %} <small>(superuser)</small>{% endif %}</td>
+        <td>{{ user.email|default:'—' }}</td><td>{{ user.phone|default:'—' }}</td>
+        <td>{% if user.is_verified %}Verified{% else %}Not verified{% endif %}</td>
+        <td>{% if user.is_active %}Active{% else %}Blocked{% endif %}</td><td>{{ user.date_joined|date:'d M Y' }}</td>
+        <td>{% if not user.is_superuser %}
+          <form method="post" action="{% url 'dashboard:toggle_user_verification' user.id %}" style="margin-bottom:5px;">{% csrf_token %}<button type="submit">{% if user.is_verified %}Unverify{% else %}Verify{% endif %}</button></form>
+          {% if user != request.user %}<form method="post" action="{% url 'dashboard:toggle_user_status' user.id %}">{% csrf_token %}<button type="submit">{% if user.is_active %}Block{% else %}Unblock{% endif %}</button></form>{% endif %}
+        {% else %}—{% endif %}</td>
+      </tr>{% empty %}<tr><td colspan="7">No users match these filters.</td></tr>{% endfor %}</tbody>
+    </table>
+    {% if page_obj.paginator.num_pages > 1 %}<p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+      {% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&status={{ status }}&verified={{ verified }}&page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+      {% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&status={{ status }}&verified={{ verified }}&page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+    </p>{% endif %}
+  </section>
+{% endblock %}

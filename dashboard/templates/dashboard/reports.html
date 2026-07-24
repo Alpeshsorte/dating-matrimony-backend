@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>Reports</h1><p>Review member safety and moderation reports.</p></div></div>
+  <section class="panel">
+    <form method="get" style="margin-bottom:20px;"><select name="status"><option value="">All statuses</option>{% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select> <button type="submit">Filter</button></form>
+    <table><thead><tr><th>Reported user</th><th>Reported by</th><th>Category</th><th>Description</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>{% for report in page_obj %}<tr>
+        <td>{{ report.reported_user.username }}</td><td>{{ report.reporter.username }}</td><td>{{ report.get_category_display }}</td><td>{{ report.description|default:'—'|truncatechars:80 }}</td><td>{{ report.created_at|date:'d M Y, H:i' }}</td><td>{{ report.get_status_display }}</td>
+        <td>{% if report.status != 'in_review' %}<form method="post" action="{% url 'dashboard:update_report_status' report.id 'in_review' %}" style="display:inline;">{% csrf_token %}<button type="submit">Review</button></form>{% endif %} {% if report.status != 'resolved' %}<form method="post" action="{% url 'dashboard:update_report_status' report.id 'resolved' %}" style="display:inline;">{% csrf_token %}<button type="submit">Resolve</button></form>{% endif %} {% if report.status != 'dismissed' %}<form method="post" action="{% url 'dashboard:update_report_status' report.id 'dismissed' %}" style="display:inline;">{% csrf_token %}<button type="submit">Dismiss</button></form>{% endif %}</td>
+      </tr>{% empty %}<tr><td colspan="7">No reports found.</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+{% endblock %}

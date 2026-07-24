@@ -1,0 +1,23 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>Dashboard</h1><p>Welcome, {{ request.user.username }}.</p></div></div>
+  <section class="cards">
+    <div class="card"><p>Total users</p><strong>{{ total_users }}</strong></div>
+    <div class="card"><p>Verified users</p><strong>{{ verified_users }}</strong></div>
+    <div class="card"><p>Active users</p><strong>{{ active_users }}</strong></div>
+    <div class="card"><p>Profiles</p><strong>{{ profile_count }}</strong></div>
+    <div class="card"><p>Conversations</p><strong>{{ conversation_count }}</strong></div>
+    <div class="card"><p>Active subscriptions</p><strong>{{ active_subscription_count }}</strong></div>
+    <div class="card"><p>Active-plan revenue</p><strong>₹{{ active_subscription_revenue }}</strong></div>
+  </section>
+  <section class="panel"><h2>Registrations in the last 7 days</h2><div class="chart">{% for item in chart_items %}<div class="chart-item"><div class="bar" style="height: {{ item.height }}%;">{{ item.count }}</div>{{ item.label }}</div>{% endfor %}</div></section>
+  <section class="panel">
+    <h2>Recent registrations</h2>
+    <table><thead><tr><th>Username</th><th>Email</th><th>Joined</th></tr></thead>
+      <tbody>{% for user in recent_users %}<tr><td>{{ user.username }}</td><td>{{ user.email|default:'—' }}</td><td>{{ user.date_joined|date:'d M Y, H:i' }}</td></tr>{% empty %}<tr><td colspan="3">No users yet.</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+{% endblock %}

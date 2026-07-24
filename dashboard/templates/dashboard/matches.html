@@ -1,0 +1,10 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Match management{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>Match management</h1><p>Review match requests and their outcomes.</p></div></div>
+  <section class="panel"><form method="get" style="margin-bottom:20px;"><select name="status"><option value="">All statuses</option>{% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select> <button type="submit">Filter</button></form>
+    <table><thead><tr><th>Requester</th><th>Recipient</th><th>Status</th><th>Created</th><th>Updated</th></tr></thead><tbody>{% for match in page_obj %}<tr><td>{{ match.requester.username }}</td><td>{{ match.recipient.username }}</td><td>{{ match.get_status_display }}</td><td>{{ match.created_at|date:'d M Y, H:i' }}</td><td>{{ match.updated_at|date:'d M Y, H:i' }}</td></tr>{% empty %}<tr><td colspan="5">No match requests yet.</td></tr>{% endfor %}</tbody></table>
+  </section>
+{% endblock %}

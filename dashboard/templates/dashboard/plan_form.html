@@ -1,0 +1,8 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}{% if plan %}Edit{% else %}Create{% endif %} plan{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>{% if plan %}Edit {{ plan.name }}{% else %}Create plan{% endif %}</h1></div></div>
+  <section class="panel" style="max-width:650px;"><form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Save plan</button> <a href="{% url 'dashboard:plans' %}">Cancel</a></form></section>
+{% endblock %}

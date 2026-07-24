@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    .layout { display: flex; min-height: 100vh; }
+    aside { width: 230px; padding: 28px 20px; background: #172554; color: white; }
+    aside h1 { margin: 0 0 36px; font-size: 20px; }
+    aside a { display: block; padding: 12px; color: #dbeafe; text-decoration: none; border-radius: 6px; }
+    aside a:hover { background: #1e3a8a; color: white; }
+    main { flex: 1; padding: 32px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; }
+    .card, .panel { padding: 20px; border-radius: 10px; background: white; box-shadow: 0 2px 8px #dbe1ee; }
+    .card p { margin: 0 0 8px; color: #64748b; } .card strong { font-size: 30px; }
+    .panel { margin-top: 24px; } table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+    .chart { display: flex; height: 190px; gap: 14px; align-items: end; border-bottom: 1px solid #cbd5e1; padding: 0 8px; }
+    .chart-item { display: flex; flex: 1; min-width: 42px; flex-direction: column; justify-content: end; text-align: center; color: #475569; font-size: 12px; }
+    .bar { background: #2563eb; border-radius: 5px 5px 0 0; min-height: 8px; margin-bottom: 8px; color: white; padding-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <h1>Dating Admin</h1>
+      <a href="{% url 'dashboard:home' %}">Dashboard</a>
+      <a href="{% url 'dashboard:users' %}">Users</a>
+      <a href="{% url 'dashboard:profiles' %}">Profiles</a>
+      <a href="{% url 'dashboard:matches' %}">Matches</a>
+      <a href="{% url 'dashboard:chats' %}">Chats</a>
+      <a href="{% url 'dashboard:notifications' %}">Notifications</a>
+      <a href="{% url 'dashboard:reports' %}">Reports</a>
+      <a href="{% url 'dashboard:plans' %}">Subscriptions</a>
+      <a href="{% url 'dashboard:settings' %}">Settings</a>
+      <a href="{% url 'dashboard:logout' %}">Logout</a>
+    </aside>
+    <main>
+      {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

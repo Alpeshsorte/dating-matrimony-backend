@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard login</title>
+  <style>
+    body { display: grid; min-height: 100vh; margin: 0; place-items: center; background: #eef2ff; font-family: Arial, sans-serif; }
+    form { width: min(380px, 90vw); padding: 32px; background: white; border-radius: 12px; box-shadow: 0 8px 30px #c7d2fe; }
+    label, input, button { display: block; width: 100%; } label { margin-top: 16px; } input { margin-top: 7px; padding: 11px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    button { margin-top: 24px; padding: 12px; border: 0; border-radius: 6px; background: #1d4ed8; color: white; cursor: pointer; }.error { color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <form method="post">
+    {% csrf_token %}
+    <h1>Dashboard login</h1>
+    {% for message in messages %}<p class="error">{{ message }}</p>{% endfor %}
+    <label for="username">Username</label><input id="username" name="username" required autofocus>
+    <label for="password">Password</label><input id="password" name="password" type="password" required>
+    <button type="submit">Sign in</button>
+  </form>
+</body>
+</html>

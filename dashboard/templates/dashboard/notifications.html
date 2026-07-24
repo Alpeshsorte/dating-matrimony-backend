@@ -1,0 +1,8 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>Notifications</h1><p>Messages sent to your members.</p></div><a href="{% url 'dashboard:notification_create' %}"><button>Send notification</button></a></div>
+  <section class="panel"><table><thead><tr><th>Recipient</th><th>Type</th><th>Title</th><th>Message</th><th>Sent</th><th>Read</th></tr></thead><tbody>{% for notification in page_obj %}<tr><td>{{ notification.recipient.username }}</td><td>{{ notification.get_kind_display }}</td><td>{{ notification.title }}</td><td>{{ notification.body|truncatechars:100 }}</td><td>{{ notification.created_at|date:'d M Y, H:i' }}</td><td>{% if notification.is_read %}Yes{% else %}No{% endif %}</td></tr>{% empty %}<tr><td colspan="6">No notifications sent yet.</td></tr>{% endfor %}</tbody></table></section>
+{% endblock %}

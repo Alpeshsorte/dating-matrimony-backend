@@ -1,0 +1,8 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Send notification{% endblock %}
+
+{% block content %}
+  <div class="header"><div><h1>Send notification</h1><p>Create an in-app notification for an active member.</p></div></div>
+  <section class="panel" style="max-width:650px;"><form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Send notification</button> <a href="{% url 'dashboard:notifications' %}">Cancel</a></form></section>
+{% endblock %}
