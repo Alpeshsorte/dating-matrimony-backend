@@ -17,8 +17,19 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
+from rest_framework.renderers import JSONOpenAPIRenderer
+from rest_framework.schemas import get_schema_view
+
+schema_view = get_schema_view(
+    title='Dating Backend API',
+    description='OpenAPI schema for the Dating Backend REST API.',
+    version='1.0.0',
+    public=True,
+    renderer_classes=[JSONOpenAPIRenderer],
+)
 
 urlpatterns = [
+    path('api/schema/', schema_view, name='openapi-schema'),
     path('dashboard/', include('dashboard.urls')),
     path('api/auth/', include('accounts.urls')),
     path('api/profiles/', include('profiles.urls')),

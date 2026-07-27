@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from dating.models import Match
+from notifications.models import Notification
 
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
@@ -70,4 +71,13 @@ class ConversationMessageView(APIView):
         serializer.is_valid(raise_exception=True)
         message = serializer.save(conversation=conversation, sender=request.user)
         conversation.save(update_fields=['updated_at'])
+        recipients = conversation.participants.exclude(pk=request.user.pk)
+        Notification.objects.bulk_create([
+            Notification(
+                recipient=recipient,
+                title=f'New message from {request.user.username}',
+                body=message.content,
+            )
+            for recipient in recipients
+        ])
         return Response(MessageSerializer(message).data, status=status.HTTP_201_CREATED)

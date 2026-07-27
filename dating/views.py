@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from .models import Match
 from .serializers import MatchSerializer
+from notifications.models import Notification
 
 
 class MyMatchListView(generics.ListAPIView):
@@ -19,6 +20,14 @@ class MyMatchListView(generics.ListAPIView):
 class MatchCreateView(generics.CreateAPIView):
     serializer_class = MatchSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        match = serializer.save()
+        Notification.objects.create(
+            recipient=match.recipient,
+            title='New match request',
+            body=f'{match.requester.username} sent you a match request.',
+        )
 
 
 class MatchActionView(APIView):
@@ -43,4 +52,10 @@ class MatchActionView(APIView):
             return Response({'detail': 'Action must be accept, reject, or cancel.'}, status=status.HTTP_400_BAD_REQUEST)
 
         match.save(update_fields=['status', 'updated_at'])
+        if action == 'accept':
+            Notification.objects.create(
+                recipient=match.requester,
+                title='Match request accepted',
+                body=f'{match.recipient.username} accepted your match request.',
+            )
         return Response(MatchSerializer(match).data)
