@@ -1,7 +1,6 @@
 # Dating Backend
 
 Django REST API for account management, dating profiles, matching, chat, notifications, reporting, and subscriptions.
-and provide inforamtion for storing
 ## Run locally
 
 ```powershell
